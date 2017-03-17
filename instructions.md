@@ -1,16 +1,16 @@
-#How to add continious integration
+# How to add continious integration from scratch for .NET project
 
-##Add AppVeyor continious integration
+## Add AppVeyor continious integration
 1) set before build script
   `nuget restore .\src\SomeProject.sln`
 2) set artifacts path
-`.\src\SomeProject\bin\**\*.exe`
+  `.\src\SomeProject\bin\**\*.exe`
 
-##Add Cake buld
-------------------------------------------------------
+## Add Cake buld
+
 1) [Add cake](http://cakebuild.net/docs/tutorials/setting-up-a-new-project)
   `nvoke-WebRequest http://cakebuild.net/download/bootstrapper/windows -OutFile build.ps1`
-------------------------------------------------------
+
 2) [Create file build.cake](http://cakebuild.net/docs/tutorials/setting-up-a-new-project)
 
 ```
@@ -33,7 +33,9 @@ Task("Restore-NuGet-Packages")
     NuGetRestore("./src/SomeProject.sln");
 });
 ```
+
 `.IsDependentOn("Restore-NuGet-Packages")`
+
 5) [Build solution](http://cakebuild.net/dsl/msbuild/)
 ```
 var configuration = Argument("configuration", "Release");
@@ -44,8 +46,9 @@ Task("Build")
   MSBuild("./src/SomeProject.sln", settings => settings.SetConfiguration(configuration));
 });
 ```
-`.IsDependentOn("Build")`
-------------------------------------------------------
+
+ `.IsDependentOn("Build")`
+
 6) [Add xunit tests](http://cakebuild.net/dsl/xunit-v2/)
 `#tool "nuget:?package=xunit.runner.console"`
 
@@ -60,4 +63,5 @@ Task("Run-Tests")
 
 `.IsDependentOn("Run-Tests")`
 
-
+## Use cake script on AppVeyor
+`.\build.ps1`
